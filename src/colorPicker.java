@@ -7,14 +7,13 @@ public class colorPicker {
 
     public colorPicker(JButton button) {
         button_to_show_dialog = button;
-        color_palette.getSelectionModel().addChangeListener(changeEvent -> {
-            button_to_show_dialog.setBackground(color_palette.getColor());
-        });
     }
 
-    public void show(){
+    public void show() {
         JDialog dialog = JColorChooser.createDialog(null, "Color Chooser",
-                true, color_palette, null, null);
+                true, color_palette,
+                actionEvent -> button_to_show_dialog.setBackground(color_palette.getColor()),
+                null);
         dialog.setVisible(true);
     }
 }

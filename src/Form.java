@@ -8,9 +8,11 @@ public class Form extends JFrame {
     private JPanel paintPanel;
     private JPanel numberChooserWrapper;
     private JLabel widthLabel;
-    private JButton chooseColorButton;
+    private JButton changeColorButton;
+    private JButton saveImageButton;
+    private JPanel wrapperForButtons;
     static final int MIN_WIDTH = 1, MAX_WIDTH = 150;
-    private final colorPicker color_picker = new colorPicker(chooseColorButton);
+    private final colorPicker color_picker = new colorPicker(changeColorButton);
 
     void initListeners() {
         numberChooser.addChangeListener(changeEvent -> {
@@ -24,7 +26,7 @@ public class Form extends JFrame {
             }
         });
 
-        chooseColorButton.addActionListener(actionEvent -> {
+        changeColorButton.addActionListener(actionEvent -> {
             color_picker.show();
         });
     }
@@ -43,13 +45,11 @@ public class Form extends JFrame {
         initListeners();
     }
 
-    public void main() throws InterruptedException {
+    public void main() {
         setVisible(true);
-        Thread.sleep(500);
-        System.out.println("you pepega");
     }
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         Form form = new Form();
         form.main();
     }
