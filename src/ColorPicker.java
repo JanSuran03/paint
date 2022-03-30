@@ -1,11 +1,11 @@
 import javax.swing.*;
 
-public class colorPicker {
+public class ColorPicker {
 
     public JColorChooser color_palette = new JColorChooser();
     JButton button_to_show_dialog;
 
-    public colorPicker(JButton button) {
+    public ColorPicker(JButton button) {
         button_to_show_dialog = button;
     }
 

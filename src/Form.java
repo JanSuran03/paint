@@ -3,18 +3,21 @@ import java.awt.*;
 
 
 public class Form extends JFrame {
-    private JPanel mainPanel;
-    private JSpinner numberChooser;
-    private JPanel paintPanel;
-    private JPanel numberChooserWrapper;
-    private JLabel widthLabel;
-    private JButton changeColorButton;
-    private JButton saveImageButton;
-    private JPanel wrapperForButtons;
+    public JPanel mainPanel;
+    public JSpinner numberChooser;
+    public JPanel paintPanel;
+    public JPanel numberChooserWrapper;
+    public JLabel widthLabel;
+    public JButton changeColorButton;
+    public JButton saveImageButton;
+    public JPanel wrapperForButtons;
+    public JButton loadImageButton;
     static final int MIN_WIDTH = 1, MAX_WIDTH = 150;
-    private final colorPicker color_picker = new colorPicker(changeColorButton);
+    public final ColorPicker color_picker = new ColorPicker(changeColorButton);
+    public final FileChooser fileChooser = new FileChooser();
+    public Image selectedImage;
 
-    void initListeners() {
+    void initListeners(Form form) {
         numberChooser.addChangeListener(changeEvent -> {
             Object v = numberChooser.getValue();
             try {
@@ -29,12 +32,17 @@ public class Form extends JFrame {
         changeColorButton.addActionListener(actionEvent -> {
             color_picker.show();
         });
+
+        loadImageButton.addActionListener(actionEvent -> {
+            fileChooser.showOpenDialog(form);
+        });
+
+        fileChooser.initListeners(form);
     }
 
     public void init() {
         numberChooser.setValue(8);
         mainPanel.setBackground(new Color(170, 170, 170));
-        //paintPanel.setSize(600, 400);
     }
 
     Form() {
@@ -42,15 +50,20 @@ public class Form extends JFrame {
         setContentPane(mainPanel);
         setBounds(300, 100, 1100, 700);
         init();
-        initListeners();
+        initListeners(this);
     }
 
     public void main() {
         setVisible(true);
+        Form f = this;
     }
 
     public static void main(String[] args) {
         Form form = new Form();
         form.main();
+    }
+
+    private void createUIComponents() {
+        paintPanel = new PaintPanel();
     }
 }
