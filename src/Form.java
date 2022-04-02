@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 
 public class Form extends JFrame {
@@ -12,10 +14,13 @@ public class Form extends JFrame {
     public JButton saveImageButton;
     public JPanel wrapperForButtons;
     public JButton loadImageButton;
+    public JTextPane fileMetadata;
+    public JButton rotateImageButton;
     static final int MIN_WIDTH = 1, MAX_WIDTH = 150;
     public final ColorPicker color_picker = new ColorPicker(changeColorButton);
     public final FileChooser fileChooser = new FileChooser();
     public Image selectedImage;
+    public int rotateQuad = 1;
 
     void initListeners(Form form) {
         numberChooser.addChangeListener(changeEvent -> {
@@ -38,6 +43,13 @@ public class Form extends JFrame {
         });
 
         fileChooser.initListeners(form);
+
+        rotateImageButton.addActionListener(actionEvent -> {
+            rotateQuad = (rotateQuad + 1) % 4;
+            if (selectedImage != null)
+                form.paintPanel.updateUI();
+        });
+
     }
 
     public void init() {
@@ -64,6 +76,6 @@ public class Form extends JFrame {
     }
 
     private void createUIComponents() {
-        paintPanel = new PaintPanel();
+        paintPanel = new PaintPanel(this);
     }
 }
