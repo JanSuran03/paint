@@ -1,7 +1,11 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
+import java.awt.geom.AffineTransform;
+import java.awt.image.RenderedImage;
+import java.io.File;
+import java.io.IOException;
 
 
 public class Form extends JFrame {
@@ -20,7 +24,6 @@ public class Form extends JFrame {
     public final ColorPicker color_picker = new ColorPicker(changeColorButton);
     public final FileChooser fileChooser = new FileChooser();
     public Image selectedImage;
-    public int rotateQuad = 1;
 
     void initListeners(Form form) {
         numberChooser.addChangeListener(changeEvent -> {
@@ -42,14 +45,24 @@ public class Form extends JFrame {
             fileChooser.showOpenDialog(form);
         });
 
+        saveImageButton.addActionListener(actionEvent -> {
+            if (selectedImage != null) {
+                try {
+                    ImageIO.write((RenderedImage) selectedImage, "bmp", new File("pepega.bmp"));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
         fileChooser.initListeners(form);
 
         rotateImageButton.addActionListener(actionEvent -> {
-            rotateQuad = (rotateQuad + 1) % 4;
-            if (selectedImage != null)
+            if (selectedImage != null) {
+                selectedImage = ImageUtil.rotateImage(selectedImage, 90);
                 form.paintPanel.updateUI();
+            }
         });
-
     }
 
     public void init() {
@@ -77,5 +90,31 @@ public class Form extends JFrame {
 
     private void createUIComponents() {
         paintPanel = new PaintPanel(this);
+        paintPanel.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent mouseEvent) {
+            }
+
+            @Override
+            public void mousePressed(MouseEvent mouseEvent) {
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent mouseEvent) {
+                if (selectedImage != null) {
+                    System.out.println(selectedImage.toString());
+                    System.out.println("width: " + selectedImage.getWidth(null));
+                    System.out.println("height: " + selectedImage.getHeight(null));
+                }
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent mouseEvent) {
+            }
+
+            @Override
+            public void mouseExited(MouseEvent mouseEvent) {
+            }
+        });
     }
 }

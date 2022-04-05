@@ -24,7 +24,6 @@ public class FileChooser extends JFileChooser {
             try {
                 img = ImageIO.read(getSelectedFile().getAbsoluteFile());
                 System.out.println("pepega - file metadata:: ");
-                form.rotateQuad = 1;
                 meta = ImageUtil.getFileMetadata(getSelectedFile().getAbsoluteFile(), img);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -36,7 +35,6 @@ public class FileChooser extends JFileChooser {
                 metaText.append(k).append(":  ").append(v).append('\n');
             });
             form.fileMetadata.setText(metaText.toString());
-            ((PaintPanel) form.paintPanel).img = img;
             form.paintPanel.updateUI();
             System.out.println("image updated");
         });

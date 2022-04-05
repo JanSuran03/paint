@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -8,7 +9,6 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 
 public class ImageUtil {
-
     static DateFormat df = new SimpleDateFormat("dd.MM.yyyy, hh:mm a");
 
     public static String str(Object... objs) {
@@ -29,6 +29,23 @@ public class ImageUtil {
         ret.put("image width", str(img.getWidth(null)));
         ret.put("image height", str(img.getHeight(null)));
         ret.put("last modified", str(df.format(f.lastModified())));
+        return ret;
+    }
+
+    public static Image rotateImage(Image img, double deg) {
+        double rad = Math.toRadians(deg),
+                sin = Math.abs(Math.sin(rad)),
+                cos = Math.abs(Math.cos(rad));
+        int width = img.getWidth(null),
+                height = img.getHeight(null),
+                newWidth = (int) Math.floor(width * cos + height * sin),
+                newHeight = (int) Math.floor(height * cos + width * sin);
+        BufferedImage ret = new BufferedImage(newWidth, newHeight, ((BufferedImage) img).getType());
+        Graphics2D g = ret.createGraphics();
+        g.translate((newWidth - width) / 2, (newHeight - height) / 2);
+        g.rotate(rad, width / 2, height / 2);
+        g.drawRenderedImage((BufferedImage) img, null);
+        g.dispose();
         return ret;
     }
 }
