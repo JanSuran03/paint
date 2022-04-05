@@ -11,7 +11,6 @@ public class PaintPanel extends JPanel {
     void paintImage(Graphics g) {
         Image img = form.selectedImage;
         if (img != null) {
-            System.out.println(img);
             Graphics2D g2d = (Graphics2D) g.create();
             g2d.drawImage(img, null, this);
             g2d.dispose();

@@ -2,10 +2,6 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.AffineTransform;
-import java.awt.image.RenderedImage;
-import java.io.File;
-import java.io.IOException;
 
 
 public class Form extends JFrame {
@@ -22,7 +18,8 @@ public class Form extends JFrame {
     public JButton rotateImageButton;
     static final int MIN_WIDTH = 1, MAX_WIDTH = 150;
     public final ColorPicker color_picker = new ColorPicker(changeColorButton);
-    public final FileChooser fileChooser = new FileChooser();
+    public final FileChooser fileChooser = new FileChooser(true);
+    public final FileChooser fileSaver = new FileChooser(false);
     public Image selectedImage;
 
     void initListeners(Form form) {
@@ -46,16 +43,20 @@ public class Form extends JFrame {
         });
 
         saveImageButton.addActionListener(actionEvent -> {
-            if (selectedImage != null) {
-                try {
-                    ImageIO.write((RenderedImage) selectedImage, "bmp", new File("pepega.bmp"));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            if (selectedImage != null)
+                System.out.println("opening saving dialog");
+                fileSaver.showOpenDialog(form);
+//            if (selectedImage != null) {
+//                try {
+//                    ImageIO.write((RenderedImage) selectedImage, "bmp", new File("pepega.bmp"));
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
         });
 
         fileChooser.initListeners(form);
+        fileSaver.initListeners(form);
 
         rotateImageButton.addActionListener(actionEvent -> {
             if (selectedImage != null) {
