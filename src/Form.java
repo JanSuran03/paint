@@ -70,9 +70,12 @@ public class Form extends JFrame {
         {
             if (!isDrawingToCanvas) {
                 isDrawingToCanvas = true;
-                selectedImage = new BufferedImage(paintPanel.getWidth(),
-                        paintPanel.getHeight(),
-                        BufferedImage.TYPE_INT_ARGB);
+                int w = paintPanel.getWidth(), h = paintPanel.getHeight();
+                selectedImage = new BufferedImage(w, h, BufferedImage.TYPE_BYTE_INDEXED);
+                Graphics2D g2d = (Graphics2D) selectedImage.getGraphics().create();
+                g2d.setColor(Color.WHITE);
+                g2d.fillRect(0, 0, w, h);
+                g2d.dispose();
                 imageMeta = null;
                 fileMetadata.setText("");
                 paintPanel.updateUI();

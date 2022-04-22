@@ -1,7 +1,6 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.*;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.File;
@@ -47,7 +46,6 @@ public class FileChooser extends JFileChooser {
                             break;
                         case SAVE:
                             System.out.println("saving to " + getSelectedFile().getAbsoluteFile() + "...");
-                            System.out.println(((BufferedImage)form.selectedImage).getType());
                             if(form.isDrawingToCanvas)
                                 form.selectedImage.getGraphics().drawImage(form.selectedImage, 0, 0, null);
                             try {
