@@ -46,7 +46,6 @@ public class PaintPanel extends JPanel {
                     g2d.fillOval(x - (width / 2), y - (width / 2), width, width);
                     g2d.dispose();
                     repaint();
-                    System.out.println("Mouse dragged: x = " + e.getX() + ", y = " + e.getY());
                 }
             }
         });

@@ -19,8 +19,8 @@ public class Form extends JFrame {
     private JButton switchToPencilButton;
     static final int MIN_WIDTH = 1, MAX_WIDTH = 150;
     public final ColorPicker color_picker = new ColorPicker(changeColorButton);
-    public final FileChooser fileChooser = new FileChooser(true);
-    public final FileChooser fileSaver = new FileChooser(false);
+    public final FileChooser fileChooser = new FileChooser(FileChooser.DialogType.LOAD);
+    public final FileChooser fileSaver = new FileChooser(FileChooser.DialogType.SAVE);
     public Image selectedImage;
     public boolean isDrawingToCanvas = false;
     public HashMap<String, String> imageMeta;
@@ -50,26 +50,24 @@ public class Form extends JFrame {
             if (selectedImage != null)
                 System.out.println("opening saving dialog");
             fileSaver.showOpenDialog(form);
-//            if (selectedImage != null) {
-//                try {
-//                    ImageIO.write((RenderedImage) selectedImage, "bmp", new File("pepega.bmp"));
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
         });
 
         fileChooser.initListeners(form);
         fileSaver.initListeners(form);
 
         rotateImageButton.addActionListener(actionEvent -> {
-            if (selectedImage != null) {
-                selectedImage = ImageUtil.rotateImage(form, selectedImage, 90);
-                form.paintPanel.updateUI();
-            }
+            if (selectedImage != null)
+                if (isDrawingToCanvas)
+                    System.out.println("Can't rotate custom bitmap: canvas dimensions aren't equal.");
+                else {
+                    selectedImage = ImageUtil.rotateImage(form, selectedImage, 90);
+                    form.paintPanel.updateUI();
+                }
         });
 
-        switchToPencilButton.addActionListener(actionEvent -> {
+        switchToPencilButton.addActionListener(actionEvent ->
+
+        {
             if (!isDrawingToCanvas) {
                 isDrawingToCanvas = true;
                 selectedImage = new BufferedImage(paintPanel.getWidth(),
