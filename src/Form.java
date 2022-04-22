@@ -1,7 +1,7 @@
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.util.HashMap;
 
 
 public class Form extends JFrame {
@@ -16,13 +16,17 @@ public class Form extends JFrame {
     public JButton loadImageButton;
     public JTextPane fileMetadata;
     public JButton rotateImageButton;
+    private JButton switchToPencilButton;
     static final int MIN_WIDTH = 1, MAX_WIDTH = 150;
     public final ColorPicker color_picker = new ColorPicker(changeColorButton);
     public final FileChooser fileChooser = new FileChooser(true);
     public final FileChooser fileSaver = new FileChooser(false);
     public Image selectedImage;
+    public boolean isDrawingToCanvas = false;
+    public HashMap<String, String> imageMeta;
 
     void initListeners(Form form) {
+
         numberChooser.addChangeListener(changeEvent -> {
             Object v = numberChooser.getValue();
             try {
@@ -45,7 +49,7 @@ public class Form extends JFrame {
         saveImageButton.addActionListener(actionEvent -> {
             if (selectedImage != null)
                 System.out.println("opening saving dialog");
-                fileSaver.showOpenDialog(form);
+            fileSaver.showOpenDialog(form);
 //            if (selectedImage != null) {
 //                try {
 //                    ImageIO.write((RenderedImage) selectedImage, "bmp", new File("pepega.bmp"));
@@ -60,15 +64,35 @@ public class Form extends JFrame {
 
         rotateImageButton.addActionListener(actionEvent -> {
             if (selectedImage != null) {
-                selectedImage = ImageUtil.rotateImage(selectedImage, 90);
+                selectedImage = ImageUtil.rotateImage(form, selectedImage, 90);
                 form.paintPanel.updateUI();
             }
         });
+
+        switchToPencilButton.addActionListener(actionEvent -> {
+            if (!isDrawingToCanvas) {
+                isDrawingToCanvas = true;
+                selectedImage = new BufferedImage(paintPanel.getWidth(),
+                        paintPanel.getHeight(),
+                        BufferedImage.TYPE_INT_ARGB);
+                imageMeta = null;
+                fileMetadata.setText("");
+                paintPanel.updateUI();
+            }
+        });
+    }
+
+    public void initButtonIcon() {
+        ImageIcon imageIcon = new ImageIcon("images/pencil.png");
+        Image img = imageIcon.getImage();
+        Image newImg = img.getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+        switchToPencilButton.setIcon(new ImageIcon(newImg));
     }
 
     public void init() {
         numberChooser.setValue(8);
         mainPanel.setBackground(new Color(170, 170, 170));
+        initButtonIcon();
     }
 
     Form() {
@@ -91,31 +115,6 @@ public class Form extends JFrame {
 
     private void createUIComponents() {
         paintPanel = new PaintPanel(this);
-        paintPanel.addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent mouseEvent) {
-            }
-
-            @Override
-            public void mousePressed(MouseEvent mouseEvent) {
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent mouseEvent) {
-                if (selectedImage != null) {
-                    System.out.println(selectedImage.toString());
-                    System.out.println("width: " + selectedImage.getWidth(null));
-                    System.out.println("height: " + selectedImage.getHeight(null));
-                }
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent mouseEvent) {
-            }
-
-            @Override
-            public void mouseExited(MouseEvent mouseEvent) {
-            }
-        });
+        ((PaintPanel) paintPanel).initListeners();
     }
 }

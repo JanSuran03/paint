@@ -32,7 +32,7 @@ public class ImageUtil {
         return ret;
     }
 
-    public static Image rotateImage(Image img, double deg) {
+    public static Image rotateImage(Form form, Image img, double deg) {
         double rad = Math.toRadians(deg),
                 sin = Math.abs(Math.sin(rad)),
                 cos = Math.abs(Math.cos(rad));
@@ -45,6 +45,13 @@ public class ImageUtil {
         g.translate((newWidth - width) / 2, (newHeight - height) / 2);
         g.rotate(rad, width / 2, height / 2);
         g.drawRenderedImage((BufferedImage) img, null);
+        HashMap<String, String> imageMeta = form.imageMeta;
+        String temp = imageMeta.get("image width");
+        imageMeta.put("image width", imageMeta.get("image height"));
+        imageMeta.put("image height", temp);
+        form.fileMetadata.setText(Util.fileMetaAsString(imageMeta));
+        //form.paintPanel.updateUI();
+
         g.dispose();
         return ret;
     }

@@ -5,7 +5,6 @@ import java.awt.*;
 import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 
 public class FileChooser extends JFileChooser {
     public boolean isLoadDialog;
@@ -24,21 +23,17 @@ public class FileChooser extends JFileChooser {
         addActionListener(actionEvent -> {
             if (isLoadDialog) { // load image
                 Image img;
-                HashMap<String, String> meta;
                 try {
                     img = ImageIO.read(getSelectedFile().getAbsoluteFile());
                     System.out.println("pepega - file metadata:: ");
-                    meta = ImageUtil.getFileMetadata(getSelectedFile().getAbsoluteFile(), img);
+                    form.imageMeta = ImageUtil.getFileMetadata(getSelectedFile().getAbsoluteFile(), img);
                 } catch (IOException e) {
                     e.printStackTrace();
                     return;
                 }
+                form.isDrawingToCanvas = false;
                 form.selectedImage = img;
-                StringBuilder metaText = new StringBuilder();
-                meta.forEach((k, v) -> {
-                    metaText.append(k).append(":  ").append(v).append('\n');
-                });
-                form.fileMetadata.setText(metaText.toString());
+                form.fileMetadata.setText(Util.fileMetaAsString(form.imageMeta));
                 form.paintPanel.updateUI();
                 System.out.println("image updated");
             } else { // save image
