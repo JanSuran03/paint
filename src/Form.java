@@ -18,6 +18,7 @@ public class Form extends JFrame {
     public JButton rotateImageButton;
     private JButton switchToPencilButton;
     private JButton eraserColorButton;
+    private JButton paintToolSwitcherButton;
     static final int MIN_WIDTH = 1, MAX_WIDTH = 150;
     public final ColorPicker main_color_picker = new ColorPicker(mainColorButton);
 
@@ -39,6 +40,15 @@ public class Form extends JFrame {
                 );
             } catch (Throwable t) {
                 System.out.println("invalid number: " + v.toString());
+            }
+        });
+        paintToolSwitcherButton.addActionListener(actionEvent -> {
+            if (((PaintPanel) paintPanel).current_paint_tool == PaintPanel.PaintTool.BRUSH) {
+                ((PaintPanel) paintPanel).current_paint_tool = PaintPanel.PaintTool.SPRAY;
+                paintToolSwitcherButton.setText("SPRAY");
+            } else {
+                ((PaintPanel) paintPanel).current_paint_tool = PaintPanel.PaintTool.BRUSH;
+                paintToolSwitcherButton.setText("BRUSH");
             }
         });
 
