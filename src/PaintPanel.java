@@ -6,10 +6,44 @@ import java.awt.event.MouseMotionAdapter;
 
 public class PaintPanel extends JPanel {
     private final Form form;
-    private boolean isMouseDown = false;
 
     public PaintPanel(Form form) {
         this.form = form;
+    }
+
+    public int mouse_button = 0;
+
+    public void mouseListener(MouseEvent e) {
+        if (form.isDrawingToCanvas) {
+            System.out.println(e.getButton());
+            ColorPicker color_picker;
+            switch (e.getButton()) {
+                case 1:
+                    mouse_button = 1;
+                    color_picker = form.main_color_picker;
+                    break;
+                case 3:
+                    mouse_button = 3;
+                    color_picker = form.eraser_color_picker;
+                    break;
+                case 0:
+                    if (mouse_button == 1) {
+                        color_picker = form.main_color_picker;
+                    } else {
+                        color_picker = form.eraser_color_picker;
+                    }
+                    break;
+                default:
+                    //System.out.println("middle button?");
+                    return;
+            }
+            Graphics2D g2d = (Graphics2D) form.selectedImage.getGraphics().create();
+            g2d.setColor(color_picker.color_palette.getColor());
+            int x = e.getX(), y = e.getY(), width = (int) form.numberChooser.getValue();
+            g2d.fillOval(x - (width / 2), y - (width / 2), width, width);
+            g2d.dispose();
+            repaint();
+        }
     }
 
     public void initListeners() {
@@ -20,12 +54,11 @@ public class PaintPanel extends JPanel {
 
             @Override
             public void mousePressed(MouseEvent e) {
-                isMouseDown = true;
+                mouseListener(e);
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                isMouseDown = false;
             }
 
             @Override
@@ -39,14 +72,7 @@ public class PaintPanel extends JPanel {
         addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
-                if (form.isDrawingToCanvas) {
-                    Graphics2D g2d = (Graphics2D) form.selectedImage.getGraphics().create();
-                    g2d.setColor(form.color_picker.color_palette.getColor());
-                    int x = e.getX(), y = e.getY(), width = (int) form.numberChooser.getValue();
-                    g2d.fillOval(x - (width / 2), y - (width / 2), width, width);
-                    g2d.dispose();
-                    repaint();
-                }
+                mouseListener(e);
             }
         });
     }

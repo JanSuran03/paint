@@ -46,8 +46,6 @@ public class FileChooser extends JFileChooser {
                             break;
                         case SAVE:
                             System.out.println("saving to " + getSelectedFile().getAbsoluteFile() + "...");
-                            if(form.isDrawingToCanvas)
-                                form.selectedImage.getGraphics().drawImage(form.selectedImage, 0, 0, null);
                             try {
                                 boolean w = ImageIO.write((RenderedImage) form.selectedImage, "bmp", getSelectedFile());
                                 System.out.println("w?: " + w);

@@ -10,20 +10,24 @@ public class Form extends JFrame {
     public JPanel paintPanel;
     public JPanel numberChooserWrapper;
     public JLabel widthLabel;
-    public JButton changeColorButton;
+    public JButton mainColorButton;
     public JButton saveImageButton;
     public JPanel wrapperForButtons;
     public JButton loadImageButton;
     public JTextPane fileMetadata;
     public JButton rotateImageButton;
     private JButton switchToPencilButton;
+    private JButton eraserColorButton;
     static final int MIN_WIDTH = 1, MAX_WIDTH = 150;
-    public final ColorPicker color_picker = new ColorPicker(changeColorButton);
+    public final ColorPicker main_color_picker = new ColorPicker(mainColorButton);
+
+    public final ColorPicker eraser_color_picker = new ColorPicker(eraserColorButton);
     public final FileChooser fileChooser = new FileChooser(FileChooser.DialogType.LOAD);
     public final FileChooser fileSaver = new FileChooser(FileChooser.DialogType.SAVE);
     public Image selectedImage;
     public boolean isDrawingToCanvas = false;
     public HashMap<String, String> imageMeta;
+    static final Color bg = new Color(170, 170, 170);
 
     void initListeners(Form form) {
 
@@ -38,9 +42,9 @@ public class Form extends JFrame {
             }
         });
 
-        changeColorButton.addActionListener(actionEvent -> {
-            color_picker.show();
-        });
+        mainColorButton.addActionListener(actionEvent -> main_color_picker.show());
+
+        eraserColorButton.addActionListener(actionEvent -> eraser_color_picker.show());
 
         loadImageButton.addActionListener(actionEvent -> {
             fileChooser.showOpenDialog(form);
@@ -73,7 +77,7 @@ public class Form extends JFrame {
                 int w = paintPanel.getWidth(), h = paintPanel.getHeight();
                 selectedImage = new BufferedImage(w, h, BufferedImage.TYPE_BYTE_INDEXED);
                 Graphics2D g2d = (Graphics2D) selectedImage.getGraphics().create();
-                g2d.setColor(Color.WHITE);
+                g2d.setColor(bg);
                 g2d.fillRect(0, 0, w, h);
                 g2d.dispose();
                 imageMeta = null;
@@ -92,7 +96,7 @@ public class Form extends JFrame {
 
     public void init() {
         numberChooser.setValue(8);
-        mainPanel.setBackground(new Color(170, 170, 170));
+        mainPanel.setBackground(bg);
         initButtonIcon();
     }
 
