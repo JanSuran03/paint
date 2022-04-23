@@ -19,6 +19,7 @@ public class Form extends JFrame {
     private JButton switchToPencilButton;
     private JButton eraserColorButton;
     private JButton paintToolSwitcherButton;
+    private JButton isEraserButton;
     static final int MIN_WIDTH = 1, MAX_WIDTH = 150;
     public final ColorPicker main_color_picker = new ColorPicker(mainColorButton);
 
@@ -42,13 +43,45 @@ public class Form extends JFrame {
                 System.out.println("invalid number: " + v.toString());
             }
         });
+        isEraserButton.addActionListener(actionEvent -> {
+            PaintPanel pp = (PaintPanel) paintPanel;
+            switch (pp.current_paint_tool) {
+                case BRUSH_ERASER:
+                    pp.current_paint_tool = PaintPanel.PaintTool.ERASER_BRUSH;
+                    isEraserButton.setText("ERASER ON");
+                    break;
+                case ERASER_BRUSH:
+                    pp.current_paint_tool = PaintPanel.PaintTool.BRUSH_ERASER;
+                    isEraserButton.setText("ERASER OFF");
+                    break;
+                case SPRAY_ERASER:
+                    pp.current_paint_tool = PaintPanel.PaintTool.ERASER_SPRAY;
+                    isEraserButton.setText("ERASER ON");
+                    break;
+                case ERASER_SPRAY:
+                    pp.current_paint_tool = PaintPanel.PaintTool.SPRAY_ERASER;
+                    isEraserButton.setText("ERASER OFF");
+            }
+        });
+
         paintToolSwitcherButton.addActionListener(actionEvent -> {
-            if (((PaintPanel) paintPanel).current_paint_tool == PaintPanel.PaintTool.BRUSH) {
-                ((PaintPanel) paintPanel).current_paint_tool = PaintPanel.PaintTool.SPRAY;
-                paintToolSwitcherButton.setText("SPRAY");
-            } else {
-                ((PaintPanel) paintPanel).current_paint_tool = PaintPanel.PaintTool.BRUSH;
-                paintToolSwitcherButton.setText("BRUSH");
+            PaintPanel pp = (PaintPanel) paintPanel;
+            switch (pp.current_paint_tool) {
+                case BRUSH_ERASER:
+                    pp.current_paint_tool = PaintPanel.PaintTool.SPRAY_ERASER;
+                    paintToolSwitcherButton.setText("SPRAY");
+                    break;
+                case ERASER_BRUSH:
+                    pp.current_paint_tool = PaintPanel.PaintTool.ERASER_SPRAY;
+                    paintToolSwitcherButton.setText("SPRAY");
+                    break;
+                case SPRAY_ERASER:
+                    pp.current_paint_tool = PaintPanel.PaintTool.BRUSH_ERASER;
+                    paintToolSwitcherButton.setText("BRUSH");
+                    break;
+                case ERASER_SPRAY:
+                    pp.current_paint_tool = PaintPanel.PaintTool.ERASER_BRUSH;
+                    paintToolSwitcherButton.setText("BRUSH");
             }
         });
 
@@ -113,7 +146,7 @@ public class Form extends JFrame {
     Form() {
         super("Paint");
         setContentPane(mainPanel);
-        setBounds(300, 100, 1100, 700);
+        setBounds(300, 100, 1200, 800);
         init();
         initListeners(this);
     }

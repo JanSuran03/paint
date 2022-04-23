@@ -22,12 +22,15 @@ public class PaintPanel extends JPanel {
     public int mouse_button = 0;
 
     public enum PaintTool {
-        BRUSH, SPRAY
+        BRUSH_ERASER, // brush which will switch to eraser
+        SPRAY_ERASER, // spray which will switch to eraser
+        ERASER_BRUSH, // eraser which will switch to brush
+        ERASER_SPRAY, // eraser which will switch to spray
     }
 
     static Random random = new Random();
 
-    public PaintTool current_paint_tool = PaintTool.BRUSH;
+    public PaintTool current_paint_tool = PaintTool.BRUSH_ERASER;
 
     public void mouseListener(MouseEvent e) {
         if (form.isDrawingToCanvas) {
@@ -35,17 +38,49 @@ public class PaintPanel extends JPanel {
             switch (e.getButton()) {
                 case 1: // left button
                     mouse_button = 1;
-                    color_picker = form.main_color_picker;
+                    switch (current_paint_tool) {
+                        case ERASER_BRUSH:
+                        case ERASER_SPRAY:
+                            color_picker = form.eraser_color_picker;
+                            break;
+                        default:
+                            color_picker = form.main_color_picker;
+                            break;
+                    }
                     break;
                 case 3: // right button
                     mouse_button = 3;
-                    color_picker = form.eraser_color_picker;
+                    switch (current_paint_tool) {
+                        case ERASER_BRUSH:
+                        case ERASER_SPRAY:
+                            color_picker = form.main_color_picker;
+                            break;
+                        default:
+                            color_picker = form.eraser_color_picker;
+                            break;
+                    }
                     break;
                 case 0: // mouse dragged
                     if (mouse_button == 1) {
-                        color_picker = form.main_color_picker;
+                        switch (current_paint_tool) {
+                            case ERASER_BRUSH:
+                            case ERASER_SPRAY:
+                                color_picker = form.eraser_color_picker;
+                                break;
+                            default:
+                                color_picker = form.main_color_picker;
+                                break;
+                        }
                     } else {
-                        color_picker = form.eraser_color_picker;
+                        switch (current_paint_tool) {
+                            case ERASER_BRUSH:
+                            case ERASER_SPRAY:
+                                color_picker = form.main_color_picker;
+                                break;
+                            default:
+                                color_picker = form.eraser_color_picker;
+                                break;
+                        }
                     }
                     break;
                 default:
@@ -56,7 +91,8 @@ public class PaintPanel extends JPanel {
             AtomicInteger y = new AtomicInteger();
             int width;
             switch (current_paint_tool) {
-                case BRUSH:
+                case BRUSH_ERASER:
+                case ERASER_BRUSH:
                     Graphics2D g2d = (Graphics2D) form.selectedImage.getGraphics().create();
                     g2d.setColor(color_picker.color_palette.getColor());
                     x.set(e.getX());
@@ -65,7 +101,8 @@ public class PaintPanel extends JPanel {
                     g2d.fillOval(x.get() - (width / 2), y.get() - (width / 2), width, width);
                     g2d.dispose();
                     break;
-                case SPRAY:
+                case SPRAY_ERASER:
+                case ERASER_SPRAY:
                     if (spray_thread != null) {
                         counter++;
                         spray_thread.interrupt();
